@@ -1,0 +1,16 @@
+# Specify the list of keys you want to send over MQTT
+
+mqtt_broker_address: 'nas.ds18' # Set this to your mqtt broker address
+mqtt_username: 'mqtt_user' # Uncomment and change this to your username if required
+mqtt_password: 'zCVCGRtvFMKVkH9ssq_R'
+
+# List the (OBIS) values that you want to send to the mqtt broker
+values_of_interest:
+  - CURRENT_ELECTRICITY_DELIVERY
+  - ELECTRICITY_EXPORTED_TOTAL
+
+client: serial
+serial_device: /dev/ttyS0
+
+topic: DS18/PV/StecaGrid_3600
+
