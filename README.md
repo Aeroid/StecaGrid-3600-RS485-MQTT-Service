@@ -31,96 +31,96 @@ As far as I can tell its a s simple request and response protocol that Steca had
 - CRC: without the CRC calculation no datagram can be synthesized.
 
 ### Install
-    pip3 install pyserial pyyaml paho-mqtt
+	pip3 install pyserial pyyaml paho-mqtt
 
 ### Usage
-			usage: StecaGrid3600_mqtt.py [-h] [-v] [-c CONFIG]
+	usage: StecaGrid3600_mqtt.py [-h] [-v] [-c CONFIG]
 
-			Feed MQTT based on RS485 from StecaGrid3600
+	Feed MQTT based on RS485 from StecaGrid3600
 
-			optional arguments:
-			  -h, --help            show this help message and exit
-			  -v, --verbose         Enable verbose output
-			  -c CONFIG, --config CONFIG
-									Load config from (default config.yaml)
+	optional arguments:
+	  -h, --help            show this help message and exit
+	  -v, --verbose         Enable verbose output
+	  -c CONFIG, --config CONFIG
+							Load config from (default config.yaml)
 
 ### config.yaml
-        mqtt_broker_address: 'nas.ds18' # Set this to your mqtt broker address
-        mqtt_username: 'mqtt_user' # Uncomment and change this to your username if required
-        mqtt_password: 'xyzxyz'
+	mqtt_broker_address: 'nas.ds18' # Set this to your mqtt broker address
+	mqtt_username: 'mqtt_user' # Uncomment and change this to your username if required
+	mqtt_password: 'xyzxyz'
 
-        # List the (OBIS) values that you want to send to the mqtt broker
-        values_of_interest:
-          - CURRENT_ELECTRICITY_DELIVERY
-          - ELECTRICITY_EXPORTED_TOTAL
+	# List the (OBIS) values that you want to send to the mqtt broker
+	values_of_interest:
+	  - CURRENT_ELECTRICITY_DELIVERY
+	  - ELECTRICITY_EXPORTED_TOTAL
 
-        client: serial
-        serial_device: /dev/ttyS0
+	client: serial
+	serial_device: /dev/ttyS0
 
-        topic: DS18/PV/StecaGrid_3600
+	topic: DS18/PV/StecaGrid_3600
 
 ### Home Assistant sensor config
-        mqtt:
-            sensor:
-              - name: "StecaGrid 3600 Total"
-                unique_id: "StecaGrid_3600_Total"
-                device_class: "energy"
-                state_class: "total_increasing"
-                unit_of_measurement: "Wh"
-                state_topic: "DS18/PV/StecaGrid_3600/ELECTRICITY_EXPORTED_TOTAL"
-              - name: "StecaGrid 3600 Power"
-                unique_id: "StecaGrid_3600_Power"
-                device_class: "power"
-                state_class: "measurement"
-                unit_of_measurement: "W"
-                state_topic: "DS18/PV/StecaGrid_3600/CURRENT_ELECTRICITY_DELIVERY"
+	mqtt:
+		sensor:
+		  - name: "StecaGrid 3600 Total"
+			unique_id: "StecaGrid_3600_Total"
+			device_class: "energy"
+			state_class: "total_increasing"
+			unit_of_measurement: "Wh"
+			state_topic: "DS18/PV/StecaGrid_3600/ELECTRICITY_EXPORTED_TOTAL"
+		  - name: "StecaGrid 3600 Power"
+			unique_id: "StecaGrid_3600_Power"
+			device_class: "power"
+			state_class: "measurement"
+			unit_of_measurement: "W"
+			state_topic: "DS18/PV/StecaGrid_3600/CURRENT_ELECTRICITY_DELIVERY"
 
 ### evcc meter config
-        meters:
-          - name: StecaGrid_3600
-            type: custom
-            power:
-              source: mqtt
-              topic: DS18/PV/StecaGrid_3600/CURRENT_ELECTRICITY_DELIVERY
-              timeout: 10s
+	meters:
+	  - name: StecaGrid_3600
+		type: custom
+		power:
+		  source: mqtt
+		  topic: DS18/PV/StecaGrid_3600/CURRENT_ELECTRICITY_DELIVERY
+		  timeout: 10s
 
 ### Steca RS485 requests for replay approach
 The following telegrams are requests to extend the replay beyond AC Power. Note, that they all address the inverter with the RS485 ID #1. You will have to change your Steca to that ID until we have figured out the CRC generation to synthesize a full new telegram for a different id. Contact me of you need a replay telegram for a differnt ID, and I might be able to record one for you from the SEM.
 
-        SG_NOMINAL_POWER = bytes.fromhex("02 01 00 10 01 7b b5 40 03 00 01 1d 72 30 95 03")
-        SG_PANEL_POWER   = bytes.fromhex("02 01 00 10 01 7b b5 40 03 00 01 22 77 12 ee 03")
-        SG_PANEL_VOLTAGE = bytes.fromhex("02 01 00 10 01 7b b5 40 03 00 01 23 78 78 e4 03")
-        SG_PANEL_CURRENT = bytes.fromhex("02 01 00 10 01 7b b5 40 03 00 01 24 79 a0 b6 03")
-        SG_VERSIONS      = bytes.fromhex("02 01 00 0c 01 7b c6 20 03 79 8c 03")
-        SG_SERIAL        = bytes.fromhex("02 01 00 10 01 7b b5 64 03 00 01 09 5e 85 6e 03")
-        SG_TIME          = bytes.fromhex("02 01 00 10 01 7b b5 64 03 00 01 05 5a 3a 44 03")
-        SG_DAILY_YIELD   = bytes.fromhex("02 01 00 10 01 7b b5 40 03 00 01 3c 91 e1 c9 03")
-        SG_TOTAL_YIELD   = bytes.fromhex("02 01 00 10 01 7b b5 64 03 00 01 f1 46 cc 79 03")
-        SG_AC_POWER      = bytes.fromhex("02 01 00 10 01 7b b5 40 03 00 01 29 7e 98 5b 03")
+	SG_NOMINAL_POWER = bytes.fromhex("02 01 00 10 01 7b b5 40 03 00 01 1d 72 30 95 03")
+	SG_PANEL_POWER   = bytes.fromhex("02 01 00 10 01 7b b5 40 03 00 01 22 77 12 ee 03")
+	SG_PANEL_VOLTAGE = bytes.fromhex("02 01 00 10 01 7b b5 40 03 00 01 23 78 78 e4 03")
+	SG_PANEL_CURRENT = bytes.fromhex("02 01 00 10 01 7b b5 40 03 00 01 24 79 a0 b6 03")
+	SG_VERSIONS      = bytes.fromhex("02 01 00 0c 01 7b c6 20 03 79 8c 03")
+	SG_SERIAL        = bytes.fromhex("02 01 00 10 01 7b b5 64 03 00 01 09 5e 85 6e 03")
+	SG_TIME          = bytes.fromhex("02 01 00 10 01 7b b5 64 03 00 01 05 5a 3a 44 03")
+	SG_DAILY_YIELD   = bytes.fromhex("02 01 00 10 01 7b b5 40 03 00 01 3c 91 e1 c9 03")
+	SG_TOTAL_YIELD   = bytes.fromhex("02 01 00 10 01 7b b5 64 03 00 01 f1 46 cc 79 03")
+	SG_AC_POWER      = bytes.fromhex("02 01 00 10 01 7b b5 40 03 00 01 29 7e 98 5b 03")
 
 ### Based on versions
 All of my tinkering is based on the following firmware versions. You milage may vary.
 
-		python3 getStecaGridData.py -ve
+	python3 getStecaGridData.py -ve
 
-		StecaGrid 3600
+	StecaGrid 3600
 
-		HMI BFAPI       5.0.0   19.03.2013 14:38:59
-		HMI FBL         2.0.3   05.04.2013 11:46:20
-		HMI APP         15.0.0  26.07.2013 13:19:06
-		HMI PAR         0.0.1   26.07.2013 13:19:06
-		HMI OEM         0.0.1   11.06.2013 08:11:29
-		PU BFAPI        5.0.0   19.03.2013_14:38:42
-		PU FBL  1.0.1   19.12.2012_16:36:04
-		PU APP  4.0.0   03.05.2013_09:37:55
-		PU PAR  3.0.0   31.01.2013_13:47:24
-		ENS1 BFAPI      5.0.0   19.03.2013_14:38:51
-		ENS1 FBL        1.0.1   19.12.2012_16:34:47
-		ENS1 APP        39.0.0  11.07.2013_14:39:50
-		ENS1 PAR        0.0.14  11.07.2013_14:40:03
-		ENS2 BFAPI      5.0.0   19.03.2013_14:38:51
-		ENS2 FBL        1.0.1   19.12.2012_16:34:47
-		ENS2 APP        39.0.0  11.07.2013_14:39:50
-		ENS2 PAR        0.0.14  11.07.2013_14:40:03
-		HMI     PU      ENS2
-		Net11
+	HMI BFAPI       5.0.0   19.03.2013 14:38:59
+	HMI FBL         2.0.3   05.04.2013 11:46:20
+	HMI APP         15.0.0  26.07.2013 13:19:06
+	HMI PAR         0.0.1   26.07.2013 13:19:06
+	HMI OEM         0.0.1   11.06.2013 08:11:29
+	PU BFAPI        5.0.0   19.03.2013_14:38:42
+	PU FBL  1.0.1   19.12.2012_16:36:04
+	PU APP  4.0.0   03.05.2013_09:37:55
+	PU PAR  3.0.0   31.01.2013_13:47:24
+	ENS1 BFAPI      5.0.0   19.03.2013_14:38:51
+	ENS1 FBL        1.0.1   19.12.2012_16:34:47
+	ENS1 APP        39.0.0  11.07.2013_14:39:50
+	ENS1 PAR        0.0.14  11.07.2013_14:40:03
+	ENS2 BFAPI      5.0.0   19.03.2013_14:38:51
+	ENS2 FBL        1.0.1   19.12.2012_16:34:47
+	ENS2 APP        39.0.0  11.07.2013_14:39:50
+	ENS2 PAR        0.0.14  11.07.2013_14:40:03
+	HMI     PU      ENS2
+	Net11
