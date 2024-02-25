@@ -33,6 +33,10 @@ As far as I can tell its a s simple request and response protocol that Steca had
 ### Install
 	pip3 install pyserial pyyaml paho-mqtt
 
+### Cableing
+
+[![Diagram](https://upload.wikimedia.org/wikipedia/commons/a/ab/StecaGrid_to_Raspberry.svg)](https://commons.wikimedia.org/wiki/File:StecaGrid_to_Raspberry.svg)
+
 ### Usage
 	usage: StecaGrid3600_mqtt.py [-h] [-v] [-c CONFIG]
 
