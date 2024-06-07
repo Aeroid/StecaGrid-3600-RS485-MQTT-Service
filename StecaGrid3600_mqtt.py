@@ -347,14 +347,14 @@ if __name__ == "__main__":
                                     v = getStecaGridResult(mapping[n])
                                     if DEBUG:
                                         print("StecaResult:", v)
-                                    if not v or v[1] == "NUL":
+                                    if not v or len(v) < 2 or v[1] == "NUL" or v[0] == "":
                                         pl = 0
                                     else:
                                         pl = v[0]
-                                    published = mqtt_client.publish(config['topic'] + '/' + n, payload=float(pl), qos=0)
-                                    if DEBUG:
-                                        print("MQTT: ", config['topic'] + '/' + n,float(pl), " > ", published)
-                                    published.wait_for_publish()
+                                        published = mqtt_client.publish(config['topic'] + '/' + n, payload=float(pl), qos=0)
+                                        if DEBUG:
+                                            print("MQTT: ", config['topic'] + '/' + n,float(pl), " > ", published)
+                                        published.wait_for_publish()
                                     time.sleep(1)
                     except KeyboardInterrupt:
                         print()
