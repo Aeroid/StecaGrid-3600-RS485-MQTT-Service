@@ -103,7 +103,7 @@ The following telegrams are requests to extend the replay beyond AC Power. Note,
 	SG_AC_POWER      = bytes.fromhex("02 01 00 10 01 7b b5 40 03 00 01 29 7e 98 5b 03")
 
 ### Based on versions
-All of my tinkering is based on the following firmware versions. You milage may vary.
+All of my tinkering is based on the following firmware versions. 
 
 	python3 getStecaGridData.py -ve
 
@@ -128,3 +128,5 @@ All of my tinkering is based on the following firmware versions. You milage may 
 	ENS2 PAR        0.0.14  11.07.2013_14:40:03
 	HMI     PU      ENS2
 	Net11
+ 
+Your milage may vary.
