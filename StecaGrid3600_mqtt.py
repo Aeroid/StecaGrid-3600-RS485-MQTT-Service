@@ -46,6 +46,9 @@ mapping = {
     "ELECTRICITY_EXPORTED_TOTAL":   SG_TOTAL_YIELD, # :2.8.0    # Total exported energy register (P-)
     "CURRENT_ELECTRICITY_DELIVERY": SG_AC_POWER,    # :2.7.0
     "Q3D_EQUIPMENT_SERIALNUMBER":   SG_SERIAL,      # :96.1.255 # Device Serialnumber
+    "CURRENT_PANEL_POWER":          SG_PANEL_POWER,  
+    "CURRENT_PANEL_VOLTAGE":        SG_PANEL_VOLTAGE,
+    "CURRENT_PANEL_CURRENT":        SG_PANEL_CURRENT,
 }
 
 def decode_stecaFloat_a(ac_bytes):
@@ -331,7 +334,13 @@ if __name__ == "__main__":
             if 'mqtt_username' in config:
                 mqtt_client.username_pw_set(config['mqtt_username'], password=config['mqtt_password'])
             mqtt_client.reconnect_delay_set(min_delay=1, max_delay=120)
-            mqtt_client.connect(config['mqtt_broker_address'])
+            try:
+                mqtt_client.connect(config['mqtt_broker_address'])
+            except Exception as e:
+                print("Can't connect to MQTT Broker (", config['mqtt_broker_address'] ,"):", e)
+                steca.close() 
+                exit()
+                
             mqtt_client.loop_start()
 
             if 'client' in config:
@@ -351,15 +360,13 @@ if __name__ == "__main__":
                                         pl = 0
                                     else:
                                         pl = v[0]
-                                        published = mqtt_client.publish(config['topic'] + '/' + n, payload=float(pl), qos=0)
-                                        if DEBUG:
-                                            print("MQTT: ", config['topic'] + '/' + n,float(pl), " > ", published)
-                                        published.wait_for_publish()
-                                    time.sleep(1)
+                                    published = mqtt_client.publish(config['topic'] + '/' + n, payload=float(pl), qos=0)
+                                    if DEBUG:
+                                        print("MQTT: ", config['topic'] + '/' + n,float(pl), " > ", published)
+                                    published.wait_for_publish()
+                            time.sleep(1)
                     except KeyboardInterrupt:
                         print()
                     finally:
                         mqtt_client.loop_stop()
                         steca.close() 
-                        
-
