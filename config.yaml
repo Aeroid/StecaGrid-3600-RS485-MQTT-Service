@@ -8,6 +8,10 @@ mqtt_password: 'zCVCGRtvFMKVkH9ssq_R'
 values_of_interest:
   - CURRENT_ELECTRICITY_DELIVERY
   - ELECTRICITY_EXPORTED_TOTAL
+  - CURRENT_PANEL_POWER
+  - CURRENT_PANEL_VOLTAGE
+  - CURRENT_PANEL_CURRENT
+  - SG_SERIAL
 
 client: serial
 serial_device: /dev/ttyS0
