@@ -2,7 +2,7 @@
 
 mqtt_broker_address: 'nas.ds18' # Set this to your mqtt broker address
 mqtt_username: 'mqtt_user' # Uncomment and change this to your username if required
-mqtt_password: 'zCVCGRtvFMKVkH9ssq_R'
+mqtt_password: 'xyzxyz'
 
 # List the (OBIS) values that you want to send to the mqtt broker
 values_of_interest:
