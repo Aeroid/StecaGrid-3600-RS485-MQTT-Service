@@ -360,10 +360,12 @@ if __name__ == "__main__":
                                         pl = 0
                                     else:
                                         pl = v[0]
-                                    published = mqtt_client.publish(config['topic'] + '/' + n, payload=float(pl), qos=0)
-                                    if DEBUG:
-                                        print("MQTT: ", config['topic'] + '/' + n,float(pl), " > ", published)
-                                    published.wait_for_publish()
+                                        
+                                    if not ( n == 'ELECTRICITY_EXPORTED_TOTAL' and pl == 0 ) # don't zero counters
+                                        published = mqtt_client.publish(config['topic'] + '/' + n, payload=float(pl), qos=0)
+                                        if DEBUG:
+                                            print("MQTT: ", config['topic'] + '/' + n,float(pl), " > ", published)
+                                        published.wait_for_publish()
                             time.sleep(1)
                     except KeyboardInterrupt:
                         print()
