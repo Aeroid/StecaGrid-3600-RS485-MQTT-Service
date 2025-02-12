@@ -361,7 +361,7 @@ if __name__ == "__main__":
                                     else:
                                         pl = v[0]
                                         
-                                    if not ( n == 'ELECTRICITY_EXPORTED_TOTAL' and pl == 0 ) # don't zero counters
+                                    if not ( n == 'ELECTRICITY_EXPORTED_TOTAL' and pl == 0 ) :
                                         published = mqtt_client.publish(config['topic'] + '/' + n, payload=float(pl), qos=0)
                                         if DEBUG:
                                             print("MQTT: ", config['topic'] + '/' + n,float(pl), " > ", published)
